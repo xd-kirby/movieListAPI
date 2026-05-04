@@ -76,6 +76,37 @@ app.post("/movies", (req, res) => {
   );
 });
 
+app.put("/movies/:id", (req, res) => {
+  const movieId = req.params.id;
+  const title = req.body.title;
+  const genre = req.body.genre;
+  const watched = req.body.watched;
+  const rating = req.body.rating;
+  const year = req.body.year;
+
+  db.get("SELECT id FROM movies WHERE id = ?", [movieId], (error, row) => {
+    if (error) {
+      res.status(500).json({ error: error.message });
+      return;
+    }
+    if (!row) {
+      res.status(404).json({ message: "Movie not found" });
+      return;
+    }
+    db.run(
+      "UPDATE movies SET title = ?, genre = ?, watched = ?, rating = ?, year = ? WHERE id = ?",
+      [title, genre, watched, rating, year, movieId],
+      function (error) {
+        if (error) {
+          res.status(500).json({ error: error.message });
+          return;
+        }
+        res.json({ message: "Movie updated successfully!" });
+      },
+    );
+  });
+});
+
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
