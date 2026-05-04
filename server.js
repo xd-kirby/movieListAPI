@@ -7,10 +7,12 @@ app.use(express.json());
 const db = new sqlite3.Database("./movies.db");
 
 function validateMovie({ title, genre, watched, rating, year }) {
-  if (!title) return "Title is required";
-  if (typeof title !== "string") return "Title must be a string";
-  if (!genre) return "Genre is required";
-  if (typeof genre !== "string") return "Genre must be a string";
+  if (title === undefined || title === null) return "Title is required";
+  if (typeof title !== "string" || title.trim() === "")
+    return "Title must be a string";
+  if (genre === undefined || genre === null) return "Genre is required";
+  if (typeof genre !== "string" || genre.trim() === "")
+    return "Genre must be a string";
   if (watched === undefined || watched === null)
     return "Watched status is required";
   if (typeof watched !== "boolean")
@@ -19,8 +21,9 @@ function validateMovie({ title, genre, watched, rating, year }) {
     return "Rating is required (input 0 if not watched yet)";
   if (typeof rating !== "number") return "Rating must be a number";
   if (rating < 0 || rating > 10) return "Rating must be between 0 and 10";
-  if (!year) return "Year is required";
+  if (year === undefined || year === null) return "Year is required";
   if (typeof year !== "number") return "Year must be a number";
+  if (!Number.isInteger(year)) return "Year must be an integer";
   return null;
 }
 
@@ -36,12 +39,12 @@ db.run(`CREATE TABLE IF NOT EXISTS movies (
 
 app.get("/movies", (req, res) => {
   db.all("SELECT * from movies", (error, rows) => {
-    if (rows.length === 0) {
-      res.status(200).json({ message: "No movies found" });
-      return;
-    }
     if (error) {
       res.status(500).json({ error: error.message });
+      return;
+    }
+    if (rows.length === 0) {
+      res.status(200).json({ message: "No movies found" });
       return;
     }
     res.json(rows);
@@ -64,11 +67,7 @@ app.get("/movies/:id", (req, res) => {
 });
 
 app.post("/movies", (req, res) => {
-  const title = req.body.title;
-  const genre = req.body.genre;
-  const watched = req.body.watched;
-  const rating = req.body.rating;
-  const year = req.body.year;
+  const { title, genre, watched, rating, year } = req.body;
 
   const validationError = validateMovie(req.body);
   if (validationError) {
@@ -91,12 +90,8 @@ app.post("/movies", (req, res) => {
 });
 
 app.put("/movies/:id", (req, res) => {
+  const { title, genre, watched, rating, year } = req.body;
   const movieId = req.params.id;
-  const title = req.body.title;
-  const genre = req.body.genre;
-  const watched = req.body.watched;
-  const rating = req.body.rating;
-  const year = req.body.year;
 
   const validationError = validateMovie(req.body);
   if (validationError) {
