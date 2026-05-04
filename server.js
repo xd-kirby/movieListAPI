@@ -61,11 +61,11 @@ app.post("/movies", (req, res) => {
     res.status(400).json({ error: "Genre is required" });
     return;
   }
-  if (!watched) {
+  if (watched === undefined || watched === null) {
     res.status(400).json({ error: "Watched status is required" });
     return;
   }
-  if (!rating) {
+  if (rating === undefined || rating === null) {
     res
       .status(400)
       .json({ error: "Rating is required (input 0 if not watched yet)" });
