@@ -5,6 +5,25 @@ const PORT = 3000;
 app.use(express.json());
 
 const db = new sqlite3.Database("./movies.db");
+
+function validateMovie({ title, genre, watched, rating, year }) {
+  if (!title) return "Title is required";
+  if (typeof title !== "string") return "Title must be a string";
+  if (!genre) return "Genre is required";
+  if (typeof genre !== "string") return "Genre must be a string";
+  if (watched === undefined || watched === null)
+    return "Watched status is required";
+  if (typeof watched !== "boolean")
+    return "Watched must be a boolean value (true or false)";
+  if (rating === undefined || rating === null)
+    return "Rating is required (input 0 if not watched yet)";
+  if (typeof rating !== "number") return "Rating must be a number";
+  if (rating < 0 || rating > 10) return "Rating must be between 0 and 10";
+  if (!year) return "Year is required";
+  if (typeof year !== "number") return "Year must be a number";
+  return null;
+}
+
 db.run(`CREATE TABLE IF NOT EXISTS movies (
   id INTEGER PRIMARY KEY,
   title TEXT NOT NULL,
@@ -15,14 +34,14 @@ db.run(`CREATE TABLE IF NOT EXISTS movies (
 );
 `);
 
-// app.get("/", (req, res) => {
-//   res.send("Hello, from the express app that will soon be handed in!");
-// });
-
 app.get("/movies", (req, res) => {
   db.all("SELECT * from movies", (error, rows) => {
     if (rows.length === 0) {
       res.status(200).json({ message: "No movies found" });
+      return;
+    }
+    if (error) {
+      res.status(500).json({ error: error.message });
       return;
     }
     res.json(rows);
@@ -51,28 +70,9 @@ app.post("/movies", (req, res) => {
   const rating = req.body.rating;
   const year = req.body.year;
 
-  console.log(title, genre, watched, rating, year);
-
-  if (!title) {
-    res.status(400).json({ error: "Title is required" });
-    return;
-  }
-  if (!genre) {
-    res.status(400).json({ error: "Genre is required" });
-    return;
-  }
-  if (watched === undefined || watched === null) {
-    res.status(400).json({ error: "Watched status is required" });
-    return;
-  }
-  if (rating === undefined || rating === null) {
-    res
-      .status(400)
-      .json({ error: "Rating is required (input 0 if not watched yet)" });
-    return;
-  }
-  if (!year) {
-    res.status(400).json({ error: "Year is required" });
+  const validationError = validateMovie(req.body);
+  if (validationError) {
+    res.status(400).json({ error: validationError });
     return;
   }
 
@@ -97,6 +97,12 @@ app.put("/movies/:id", (req, res) => {
   const watched = req.body.watched;
   const rating = req.body.rating;
   const year = req.body.year;
+
+  const validationError = validateMovie(req.body);
+  if (validationError) {
+    res.status(400).json({ error: validationError });
+    return;
+  }
 
   db.get("SELECT id FROM movies WHERE id = ?", [movieId], (error, row) => {
     if (error) {
