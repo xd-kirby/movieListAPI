@@ -57,6 +57,20 @@ app.post("/movies", (req, res) => {
     res.status(400).json({ error: "Title is required" });
     return;
   }
+  if (!genre) {
+    res.status(400).json({ error: "Genre is required" });
+    return;
+  }
+  if (!watched) {
+    res.status(400).json({ error: "Watched status is required" });
+    return;
+  }
+  if (!rating) {
+    res
+      .status(400)
+      .json({ error: "Rating is required (input 0 if not watched yet)" });
+    return;
+  }
   if (!year) {
     res.status(400).json({ error: "Year is required" });
     return;
@@ -101,9 +115,31 @@ app.put("/movies/:id", (req, res) => {
           res.status(500).json({ error: error.message });
           return;
         }
+
         res.json({ message: "Movie updated successfully!" });
       },
     );
+  });
+});
+
+app.delete("/movies/:id", (req, res) => {
+  const movieId = req.params.id;
+  db.get("SELECT id FROM movies WHERE id = ?", [movieId], (error, row) => {
+    if (error) {
+      res.status(500).json({ error: error.message });
+      return;
+    }
+    if (!row) {
+      res.status(404).json({ message: "Movie not found" });
+      return;
+    }
+    db.run("DELETE FROM movies WHERE id = ?", [movieId], function (error) {
+      if (error) {
+        res.status(500).json({ error: error.message });
+        return;
+      }
+      res.json({ message: "Movie deleted successfully!" });
+    });
   });
 });
 
