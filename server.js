@@ -38,7 +38,17 @@ db.run(`CREATE TABLE IF NOT EXISTS movies (
 `);
 
 app.get("/movies", (req, res) => {
-  db.all("SELECT * from movies", (error, rows) => {
+  const { genre } = req.query;
+
+  let query = "SELECT * FROM movies";
+  const params = [];
+
+  if (genre) {
+    query += " WHERE genre = ?";
+    params.push(genre);
+  }
+
+  db.all(query, params, (error, rows) => {
     if (error) {
       res.status(500).json({ error: error.message });
       return;
