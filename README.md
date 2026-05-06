@@ -200,6 +200,7 @@ movieListAPI/
 * `node_modules/` is excluded via `.gitignore`
 * Duplicate movies are currently allowed
 * SQLite stores booleans as `0` and `1`
+* Quary parameter for the genre is case sensitive (first letter needs to be capitalised. E.g. "Sci-Fi" or "Horror")
 * PUT requires all fields (no PATCH for partial updates)
 
 ---
