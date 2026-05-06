@@ -1,0 +1,221 @@
+{
+  "info": {
+    "_postman_id": "7e24f62c-6a67-4d44-a1e5-91a86befb719",
+    "name": "Movie List API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "53607107",
+    "_collection_link": "https://go.postman.co/collection/53607107-7e24f62c-6a67-4d44-a1e5-91a86befb719?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "GET - movies",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/movies",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "movies"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GET - movies/:id",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/movies/2",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "movies",
+            "2"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "POST - movies",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n\"title\": \"Backrooms\",\r\n\"genre\": \"Horror\",\r\n\"watched\": false,\r\n\"rating\": 0,\r\n\"year\": 2026\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/movies",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "movies"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "PUT - movies",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n\"title\": \"Interstellar\",\r\n\"genre\": \"Sci-Fi\",\r\n\"watched\": true,\r\n\"rating\": 8,\r\n\"year\": 2014\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/movies/1",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "movies",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "DEL - movies",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": ""
+        },
+        "url": {
+          "raw": "{{baseUrl}}/movies/4",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "movies",
+            "4"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "PUT - Error code testing",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n\"title\": \"Backrooms\",\r\n\"genre\": \"Horror\",\r\n\"watched\": false,\r\n\"rating\": 0,\r\n\"year\": 2026\r\n} \r\n\r\n//id 777 doesnt exist as of yet so it will throw a 404\r\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/movies/777",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "movies",
+            "777"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          "var baseUrl = \"http://localhost:3000\"\r",
+          "pm.environment.set(\"baseUrl\", baseUrl);"
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ]
+}
