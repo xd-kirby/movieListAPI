@@ -1,0 +1,26 @@
+:root {
+  --bg: #1f2428;
+  --surface: #272b30;
+  --surface-soft: #31363c;
+  --text: #e8ecf1;
+  --muted: #9aa1a8;
+  --border: #3d4248;
+  --accent: #8fa7b3;
+  --accent-strong: #b3c1cc;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
